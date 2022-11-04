@@ -25,17 +25,12 @@ btnGet1.addEventListener("click", ()=>{
     let usrId = inputGet1Id.value
     fetch(URL + resource + usrId)
     .then(response => response.json())
-    
     .then(response => console.log(response))
-    .catch(err => console.log(err))
+    .catch(err => console.error(err));
+    
     
 });
 
-function evaluarEstado(response){
-    if(!response.ok){
-        throw Error(response.status);
-        return response;
-    }
-}
+
 
 
