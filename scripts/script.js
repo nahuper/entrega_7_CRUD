@@ -2,7 +2,10 @@
 const inputGetId = document.getElementById("inputGetId");
 const inputNombre = document.getElementById("inputNombre");
 const inputApellido = document.getElementById("inputApellido");
-const inputPutId = document.getElementById("inputPutId");
+
+// Input de "Modificar Registro"
+const inputModReg = document.getElementById("inputModReg");
+
 const inputDelete = document.getElementById("inputDelete");
 const results = document.getElementById("results");
 
@@ -10,9 +13,13 @@ const results = document.getElementById("results");
 
 const btnGet1 = document.getElementById("btnGet1");
 const btnPost = document.getElementById("btnPost");
+
+// Boton "Modificar"
 const btnPut = document.getElementById("btnPut");
-const btnDelete = document.getElementById("btnDelete");
+//Boton "Guardar" del Modal
 const btnSendChanges = document.getElementById("btnSendChanges");
+
+const btnDelete = document.getElementById("btnDelete");
 
 /**Variables API */
 
@@ -22,31 +29,30 @@ let resultArray = [];
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    getData();
+    console.log("Lptm");
     btnGet1.addEventListener("click", () => {
-
         getData();
-        recorrerObjetos();
     });
 
-    function getData(){
+    function getData() {
         let usrId = inputGetId.value;
         fetch(URL + resource + usrId)
             .then((response) => { return response.json() })
             .then((response) => {
-                resultArray = response
+                resultArray = response;
+                recorrerObjetos(response);
                 console.log(resultArray);
             })
             .catch(err => console.error(err));
-        
+
         //console.log(resultArray);
     }
 
 
-    function recorrerObjetos() {
+    function recorrerObjetos(users) {
         let htmlContentToAppend = "";
-        if (resultArray.length > 0) {
-            for (let item of resultArray) {
+        if (users.length > 0) {
+            for (let item of users) {
                 const { id, name, lastname } = item;
                 htmlContentToAppend += `
                 <p>ID: ${id}</p>
@@ -55,10 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 `
             }
         } else {
-
-            htmlContentToAppend += `<p>ID: ${resultArray.id}</p>
-            <p>Name: ${resultArray.name}</p>
-            <p>Lastname: ${resultArray.lastname}</p>`
+            htmlContentToAppend += `<p>ID: ${users.id}</p>
+            <p>Name: ${users.name}</p>
+            <p>Lastname: ${users.lastname}</p>`
         }
 
         results.innerHTML = htmlContentToAppend;
@@ -82,14 +87,25 @@ document.addEventListener("DOMContentLoaded", () => {
             redirect: 'follow'
         };
 
+
         fetch(URL + resource, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
+            .then(response => response.json())
+            .then(response => getData())
             .catch(error => console.log('error', error));
-        console.log("bla")
-        recorrerObjetos();
+
 
     })
+
+    btnPut.addEventListener("click", () => {
+        let inputValue = inputModReg.value;
+        getData();
+        
+        let obj = resultArray.find( ({id}) => id === inputValue);
+        console.log(obj);
+
+    })
+
+
 })
 
 
