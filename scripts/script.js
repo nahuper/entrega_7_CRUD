@@ -1,5 +1,5 @@
 /** Valores de entrada */
-const inputGetId = document.getElementById("inputGet1Id");
+const inputGetId = document.getElementById("inputGetId");
 const inputNombre = document.getElementById("inputNombre");
 const inputApellido = document.getElementById("inputApellido");
 const inputPutId = document.getElementById("inputPutId");
