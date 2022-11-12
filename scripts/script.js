@@ -5,6 +5,9 @@ const inputApellido = document.getElementById("inputApellido");
 const inputModalNombre = document.getElementById("inputModalNombre");
 const inputModalApellido = document.getElementById("inputModalApellido");
 
+const btnArray = document.querySelectorAll(".toDisabled");
+const inpArray = document.querySelectorAll(".input");
+
 // Input de "Modificar Registro"
 const inputModReg = document.getElementById("inputModReg");
 
@@ -157,4 +160,39 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 });
 
-function switchEnabledBtn(status, el) {}
+function switchEnabledBtn(id, status = false) {
+	const element = document.querySelector(`#${id}`);
+	element.disabled = status;
+}
+
+function validateInput() {
+	inputNombre.addEventListener("input", () => {
+		if (inputApellido.value != "" && inputNombre != "") {
+			switchEnabledBtn("btnPost");
+		} else {
+			switchEnabledBtn("btnPost", true);
+		}
+	});
+	inputApellido.addEventListener("input", () => {
+		if (inputApellido.value != "" && inputNombre != "") {
+			switchEnabledBtn("btnPost");
+		} else {
+			switchEnabledBtn("btnPost", true);
+		}
+	});
+	inputModReg.addEventListener("input", () => {
+		if (inputModReg.value !== "") {
+			switchEnabledBtn("btnPut");
+		} else {
+			switchEnabledBtn("btnPut", true);
+		}
+	});
+	inputDelete.addEventListener("input", () => {
+		if (inputDelete.value !== "") {
+			switchEnabledBtn("btnDelete");
+		} else {
+			switchEnabledBtn("btnDelete", true);
+		}
+	});
+}
+validateInput();
