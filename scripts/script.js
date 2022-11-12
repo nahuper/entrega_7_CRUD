@@ -194,7 +194,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			.then((response) => getData())
 			.catch((error) => {console.log(error)});
 
-
+			let userMod = resultArray.find(({ id }) => id === idtoDelete);
+			if (userMod === undefined) {
+				
+				errorAlerta();
+			}else if(userMod!==undefined){
+				let alert = document.getElementById('alert-error')
+				alert.classList.remove('show')
+			}
 
 
 		await getData();
