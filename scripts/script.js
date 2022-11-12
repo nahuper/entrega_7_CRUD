@@ -62,10 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			for (let item of resultArray) {
 				const { id, name, lastname } = item;
 				htmlContentToAppend += `
+				<li>
                 <p>ID: ${id}</p>
                 <p>Name: ${name}</p>
                 <p>Lastname: ${lastname}</p>
-                `;
+                </li>
+				`;
 			}
 		} else {
 			htmlContentToAppend += `<p>ID: ${resultArray.id}</p>
