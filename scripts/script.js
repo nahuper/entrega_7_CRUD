@@ -37,23 +37,41 @@ let resultArray = [];
 document.addEventListener("DOMContentLoaded", () => {
 	btnGet1.addEventListener("click", async () => {
 		await getData();
-		recorrerObjetos();
+		//recorrerObjetos();
 	});
 
 	async function getData() {
 		let usrId = inputGetId.value;
 		await fetch(URL + resource + usrId)
 			.then((response) => {
-				return response.json();
+				if (response.ok) {
+
+					return response.json();
+				} else {
+					errorAlerta();
+
+				}
+
 			})
 			.then((response) => {
 				resultArray = response;
 
+				recorrerObjetos();
+
 				// console.log(resultArray);
 			})
 			.catch((err) => console.error(err));
-
 		console.log(resultArray);
+	}
+
+	function errorAlerta() {
+		let alert = document.getElementById('alert-error')
+		alert.classList.add('show')
+		setTimeout(function () {
+
+			alert.classList.remove('show')
+			alert.classList.add('hide')
+		}, 3000)
 	}
 
 	function recorrerObjetos() {
@@ -101,11 +119,29 @@ document.addEventListener("DOMContentLoaded", () => {
 			.catch((error) => console.log("error", error));
 	});
 
+
+
+
+
+
+
 	btnPut.addEventListener("click", async () => {
 		let inputUserId = inputModReg.value;
+		let myModal = document.getElementById('dataModal')
+		
+
 		await getData();
 
 		let userMod = resultArray.find(({ id }) => id === inputUserId);
+		console.log(userMod);
+		if (userMod === undefined) {
+			document.querySelector('.modal-backdrop').remove()
+			//modal.hide()
+			//document.querySelector('')
+			let myModal = document.getElementById('dataModal')
+			myModal.classList.remove("show");
+			errorAlerta();
+		}
 
 		inputModalNombre.value = userMod.name;
 		inputModalApellido.value = userMod.lastname;
@@ -156,7 +192,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		await fetch(URL + resource + idtoDelete, requestOptions)
 			.then((response) => response.json())
 			.then((response) => getData())
-			.catch((error) => console.log("error", error));
+			.catch((error) => {console.log(error)});
+
+
+
 
 		await getData();
 		recorrerObjetos();
