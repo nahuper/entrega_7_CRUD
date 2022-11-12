@@ -70,9 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
 				`;
 			}
 		} else {
-			htmlContentToAppend += `<p>ID: ${resultArray.id}</p>
+			htmlContentToAppend += `<li><p>ID: ${resultArray.id}</p>
             <p>Name: ${resultArray.name}</p>
-            <p>Lastname: ${resultArray.lastname}</p>`;
+            <p>Lastname: ${resultArray.lastname}</p>
+			</li>`;
 		}
 
 		results.innerHTML = htmlContentToAppend;
