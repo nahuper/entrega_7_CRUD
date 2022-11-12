@@ -2,6 +2,8 @@
 const inputGetId = document.getElementById("inputGetId");
 const inputNombre = document.getElementById("inputNombre");
 const inputApellido = document.getElementById("inputApellido");
+const inputModalNombre = document.getElementById("inputModalNombre");
+const inputModalApellido = document.getElementById("inputModalApellido");
 
 // Input de "Modificar Registro"
 const inputModReg = document.getElementById("inputModReg");
@@ -13,6 +15,8 @@ const results = document.getElementById("results");
 
 const btnGet1 = document.getElementById("btnGet1");
 const btnPost = document.getElementById("btnPost");
+
+const btnModalSave = document.getElementById("btnSendChanges");
 
 // Boton "Modificar"
 const btnPut = document.getElementById("btnPut");
@@ -27,91 +31,130 @@ const URL = "https://636519c1f711cb49d1f52074.mockapi.io/";
 const resource = "users/";
 let resultArray = [];
 
-
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("Lptm");
-    btnGet1.addEventListener("click", () => {
-        getData();
-    });
+	btnGet1.addEventListener("click", async () => {
+		await getData();
+		recorrerObjetos();
+	});
 
-    function getData() {
-        let usrId = inputGetId.value;
-        fetch(URL + resource + usrId)
-            .then((response) => { return response.json() })
-            .then((response) => {
-                resultArray = response;
-                recorrerObjetos(response);
-                console.log(resultArray);
-            })
-            .catch(err => console.error(err));
+	async function getData() {
+		let usrId = inputGetId.value;
+		await fetch(URL + resource + usrId)
+			.then((response) => {
+				return response.json();
+			})
+			.then((response) => {
+				resultArray = response;
 
-        //console.log(resultArray);
-    }
+				// console.log(resultArray);
+			})
+			.catch((err) => console.error(err));
 
+		console.log(resultArray);
+	}
 
-    function recorrerObjetos(users) {
-        let htmlContentToAppend = "";
-        if (users.length > 0) {
-            for (let item of users) {
-                const { id, name, lastname } = item;
-                htmlContentToAppend += `
+	function recorrerObjetos() {
+		let htmlContentToAppend = "";
+		if (resultArray.length > 0) {
+			for (let item of resultArray) {
+				const { id, name, lastname } = item;
+				htmlContentToAppend += `
                 <p>ID: ${id}</p>
                 <p>Name: ${name}</p>
                 <p>Lastname: ${lastname}</p>
-                `
-            }
-        } else {
-            htmlContentToAppend += `<p>ID: ${users.id}</p>
-            <p>Name: ${users.name}</p>
-            <p>Lastname: ${users.lastname}</p>`
-        }
+                `;
+			}
+		} else {
+			htmlContentToAppend += `<p>ID: ${resultArray.id}</p>
+            <p>Name: ${resultArray.name}</p>
+            <p>Lastname: ${resultArray.lastname}</p>`;
+		}
 
-        results.innerHTML = htmlContentToAppend;
+		results.innerHTML = htmlContentToAppend;
+	}
 
-    }
+	btnPost.addEventListener("click", () => {
+		let myHeaders = new Headers();
+		myHeaders.append("Content-Type", "application/json");
 
-    btnPost.addEventListener("click", () => {
+		let raw = JSON.stringify({
+			name: inputNombre.value,
+			lastname: inputApellido.value,
+		});
 
-        let myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+		let requestOptions = {
+			method: "POST",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow",
+		};
 
-        let raw = JSON.stringify({
-            "name": inputNombre.value,
-            "lastname": inputApellido.value
-        });
+		fetch(URL + resource, requestOptions)
+			.then((response) => response.json())
+			.then((response) => getData())
+			.catch((error) => console.log("error", error));
+	});
 
-        let requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-        };
+	btnPut.addEventListener("click", async () => {
+		let inputUserId = inputModReg.value;
+		await getData();
 
+		let userMod = resultArray.find(({ id }) => id === inputUserId);
 
-        fetch(URL + resource, requestOptions)
-            .then(response => response.json())
-            .then(response => getData())
-            .catch(error => console.log('error', error));
+		inputModalNombre.value = userMod.name;
+		inputModalApellido.value = userMod.lastname;
 
+		console.log(userMod);
+	});
+	btnModalSave.addEventListener("click", async () => {
+		console.log(inputModalNombre.value, inputModalApellido.value);
+		let myHeaders = new Headers();
+		myHeaders.append("Content-Type", "application/json");
 
-    })
+		let raw = JSON.stringify({
+			name: inputModalNombre.value,
+			lastname: inputModalApellido.value,
+		});
 
-    btnPut.addEventListener("click", () => {
-        let inputValue = inputModReg.value;
-        getData();
-        
-        let obj = resultArray.find( ({id}) => id === inputValue);
-        console.log(obj);
+		let requestOptions = {
+			method: "PUT",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow",
+		};
 
-    })
+		await fetch(URL + resource + inputModReg.value, requestOptions)
+			.then((response) => response.json())
+			.then((response) => getData())
+			.catch((error) => console.log("error", error));
 
+		await getData();
+		recorrerObjetos();
+	});
 
-})
+	btnDelete.addEventListener("click", async () => {
+		const idtoDelete = inputDelete.value;
 
+		let myHeaders = new Headers();
+		myHeaders.append("Content-Type", "application/json");
 
+		let raw = "";
 
+		let requestOptions = {
+			method: "DELETE",
+			headers: myHeaders,
+			body: raw,
+			redirect: "follow",
+		};
 
+		await fetch(URL + resource + idtoDelete, requestOptions)
+			.then((response) => response.json())
+			.then((response) => getData())
+			.catch((error) => console.log("error", error));
 
+		await getData();
+		recorrerObjetos();
+	});
+});
 
-
-
+function switchEnabledBtn(status, el) {}
