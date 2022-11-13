@@ -118,6 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			.then((response) => response.json())
 			.then((response) => getData())
 			.catch((error) => console.log("error", error));
+
+			inputNombre.value="";
+			inputApellido.value="";
 	});
 
 
@@ -134,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		await recorrerObjetos();
 		
 		let userMod = resultArray.find(({ id }) => id === inputUserId);
-		console.log(userMod);
+
 		if (userMod === undefined) {
 			document.querySelector('.modal-backdrop').remove()
 			//modal.hide()
@@ -145,8 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		inputModalNombre.value = userMod.name;
 		inputModalApellido.value = userMod.lastname;
-
-		console.log(userMod);
 
 
 
