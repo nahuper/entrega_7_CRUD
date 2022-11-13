@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			})
 			.catch((err) => console.error(err));
 		console.log(resultArray);
+		inputGetId.value="";
 	}
 
 	function errorAlerta() {
@@ -128,10 +129,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	btnPut.addEventListener("click", async () => {
 		let inputUserId = inputModReg.value;
 		let myModal = document.getElementById('dataModal')
+
 		
-
-		await getData();
-
+		await recorrerObjetos();
+		
 		let userMod = resultArray.find(({ id }) => id === inputUserId);
 		console.log(userMod);
 		if (userMod === undefined) {
@@ -142,11 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			myModal.classList.remove("show");
 			errorAlerta();
 		}
-
 		inputModalNombre.value = userMod.name;
 		inputModalApellido.value = userMod.lastname;
 
 		console.log(userMod);
+
+
+
 	});
 	btnModalSave.addEventListener("click", async () => {
 		console.log(inputModalNombre.value, inputModalApellido.value);
@@ -191,17 +194,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		await fetch(URL + resource + idtoDelete, requestOptions)
 			.then((response) => response.json())
-			.then((response) => getData())
-			.catch((error) => {console.log(error)});
+			.then((response) => recorrerObjetos())
+			.catch((error) => { console.log(error) });
 
-			let userMod = resultArray.find(({ id }) => id === idtoDelete);
-			if (userMod === undefined) {
-				
-				errorAlerta();
-			}else if(userMod!==undefined){
-				let alert = document.getElementById('alert-error')
-				alert.classList.remove('show')
-			}
+		let userMod = resultArray.find(({ id }) => id === idtoDelete);
+		if (userMod === undefined) {
+
+			errorAlerta();
+		}
 
 
 		await getData();
